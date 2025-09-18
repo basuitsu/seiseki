@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="多摩大学　多摩大学附属聖ヶ丘中学高等学校のバスの時間を教えてくれます　聖蹟桜ヶ丘方面の時刻表です">
+      <link rel="icon" href="aikonn tannpin .png" type="image/png">
+  <link rel ="stylesheet" href="styles3.css">
+
+
+  <title>バスいつ？　聖蹟　時刻表</title>
+  <style>
+    /* ===== リセット & 基本設定 ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: sans-serif;
+      background: #fff;
+    }
+
+    /* ===== スプラッシュ画面 ===== */
+    #splash {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 1s ease;
+    }
+
+    #splash img {
+      width: 200px;
+      max-width: 80vw;
+      height: auto;
+      animation: fadeout 1s ease 2s forwards;
+    }
+
+    @keyframes fadeout {
+      to { opacity: 0; }
+    }
+
+    body.loaded #splash {
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    #page {
+      display: none;
+    }
+
+    body.loaded #page {
+      display: block;
+    }
+
+    /* ===== ヘッダー（レスポンシブ対応） ===== */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo img {
+      height: 36px;
+      max-height: 8vh;
+    }
+
+    .menu-button {
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: block;
+    }
+
+     nav {
+      position: absolute;
+      top: 56px;
+      right: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      flex-direction: column;
+      padding: 10px;
+      gap: 10px;
+      display: none;
+      z-index: 200;
+    }
+    nav.show {
+      display: flex;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      padding: 10px 15px;
+      min-width: 150px;
+    }
+
+    /* ===== PC用スタイル ===== */
+    @media (min-width: 768px) {
+      .menu-button {
+        display: none;
+      }
+
+      nav {
+        position: static;
+        display: flex !important;
+        flex-direction: row;
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        gap: 20px;
+      }
+
+      nav.show {
+        display: flex !important;
+      }
+    }
+
+    /* ===== メインコンテンツ ===== */
+    main {
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 16px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- スプラッシュ画面 -->
+  <div id="splash">
+    <img src="aikonn tannpin .png"alt="ロゴ">
+  </div>
+
+  <!-- ページ本体 -->
+  <div id="page">
+    <!-- ヘッダー -->
+  <header>
+  <div class="logo">
+<a href="https://basuitsu.github.io/home/HOME.html">
+  <img src="aikon.png" alt="ロゴ">
+</a>
+
+
+  </div>
+  <button class="menu-button" id="menuButton">☰</button>
+  <nav id="menu">
+     <a href="https://basuitsu.github.io/seiseki/seiseki.html">聖蹟~学校方面　時刻表</a>
+        <a href="https://basuitsu.github.io/nagayama/nagayama.html">永山~学校方面　時刻表</a>
+        <a href="https://basuitsu.github.io/sonota/sonota.html">その他　いろいろ</a>
+
+
+  </nav>
+</header>
+
+    <!-- メイン -->
+     <main>
+
+
+
+
+<body>
+
+<p id="currentTime"></p>
+
+<script>
+function updateTime() {
+  const now = new Date();
+  const timeString = now.toLocaleTimeString();
+  document.getElementById("currentTime").textContent = timeString;
+}
+
+setInterval(updateTime, 1000); // 1秒ごとに更新
+</script>
+
+</body>
+
+
+
+
+
+
+
+
+
+  <style>
+    :root {
+      --gap: 8px;
+      --radius: 16px;
+      --cell-min: 140px;
+      --font: clamp(12px, 1.4vw, 16px);
+      --font-lg: clamp(14px, 1.8vw, 18px);
+      --font-xl: clamp(16px, 2.2vw, 22px);
+      --header-bg: #f0f4f8;
+      --border: #d1d9e6;
+      --ink: #0f172a;
+      --muted: #747d8a;
+      --accent: #2d4a88;
+      --now: #e0f2fe;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'Noto Sans JP', sans-serif;
+      background: linear-gradient(135deg, #eef2f3, #d9e4f5);
+      color: var(--ink);
+      font-size: var(--font);
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 16px;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: var(--font-xl);
+      color: var(--accent);
+      margin: 0;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+    select, button {
+      font: inherit;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+    }
+    button.primary {
+      background: var(--accent);
+      color: white;
+      border: none;
+      transition: background 0.3s;
+    }
+    button.primary:hover {
+      background: #3e5bb9;
+    }
+    .board {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .stickywrap {
+      overflow: auto;
+      max-height: 70vh;
+    }
+    .grid {
+      display: grid;
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+    .cell {
+      padding: 10px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: white;
+    }
+    .head {
+      background: var(--header-bg);
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .rowhead {
+      background: var(--header-bg);
+      font-weight: bold;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+    .now {
+      background: var(--now);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .chip {
+      background: var(--accent);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+    .caption {
+      color: var(--muted);
+      margin-top: 8px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>聖蹟~学校方面時刻表</h1>
+      <div class="controls">
+        <label for="day">曜日</label>
+        <select id="day">
+          <option value="weekday">平日（水曜除く）</option>
+          <option value="wednesday">水曜日</option>
+          <option value="holiday">休日</option>
+        </select>
+        <button id="nowBtn" class="primary">現在時刻へ</button>
+      </div>
+    </header>
+
+    <div class="board">
+      <div class="stickywrap" id="wrap">
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+    <p class="caption">※がついてるものは永山経由便です</p>
+
+<h1>アクセス</h1>
+<h3>〒206-0022 東京都多摩市聖ケ丘４丁目１−１</h3>
+<h3>京王線聖蹟桜ヶ丘駅からバスで１０分　永山駅から１５分ほど</h3>
+
+
+<iframe
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3242.918264950962!2d139.46178157602498!3d35.62974143280028!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018fb48f548a6a9%3A0x83c2dd7e38e2e7bc!2z5aSa5pGp5aSn5a2m6ZmE5bGe6IGW44O25LiY5Lit5a2m6auY562J5a2m5qCh!5e0!3m2!1sja!2snl!4v1755083459025!5m2!1sja!2snl"
+  width="600"
+  height="450"
+  style="border: 0"
+  allowfullscreen=""
+  loading="lazy"
+  referrerpolicy="no-referrer-when-downgrade"
+  class="gmap_iframe"
+></iframe>
+
+<h1>                        hello,world</h1>
+
+<img src="アクセス.png" style="border: 10px solid rgb(52, 100, 70);">
+
+
+<P>見てくれてありがとう！</P>
+
+  </div>
+
+  <script>
+    const schedule = {
+      weekday: {
+        '聖蹟桜ヶ丘駅行': { '09': ['55',], '10': ['40',], '12': ['20',], '13':['0※永山経由便','50',],  '14':['50',]  ,'16':['5','25','45※永山経由便'] ,'17':['15※永山経由便', '50※永山経由便'], '18':['5※永山経由便','40※永山経由便',] },
+        '学校行き': { '07': ['25(中学生のみ)',], '08': ['00(高校生のみ)', '35'], '10': ['15',]  ,'11':['0'], '12':['40'] , '13':['25※永山経由便'], '14':['10'] , '15':['10',]},
+      },
+      wednesday: {
+        '聖蹟桜ヶ丘駅行': {'09':['55',] , '10':['40',],  '12':['20,'],  '13':['00※永山経由便', '20※永山経由便', '50',],  '14':['50',],  '15':['25'],    '16':['5','25','45※永山経由便'] , '17':['15','50※永山経由便',], '18':['05※永山経由便','40※永山経由便',]},
+        '学校行き': {'07':['25(中学生のみ)'],'08':['0(高校生のみ)',] ,'10':['15'],'11':['00'],'12':['40'], '13':['25※永山経由便'], '14':['10'], '15':['10']},
+      },
+      holiday: {
+        '聖蹟桜ヶ丘駅行': {'09':['30※永山経由便'], '10':['10※永山経由便', '30※永山経由便'],  '11':['40'],   '12':['30','55※永山経由便'], '13':['25※永山経由便'],  '14':['00※永山経由便','30※永山経由便',], '15':['00※永山経由便','30※永山経由便'] ,'16':['00※永山経由便','30※永山経由便'], '17':['00※永山経由便','30※永山経由便']  , '18':['00※永山経由便','30※永山経由便']   },
+        '学校行き': {'07':['25'],  '08':['00','25※永山経由便','55※永山経由便'],   '09':['00','25※永山経由便','55※永山経由便'],    '10':['25※永山経由便','55※永山経由便'],    '11':['55※永山経由便'],  '12':['50※永山経由便'],  　'13':['20※永山経由便'],'14':['25※永山経由便'], }
+      }
+    };
+
+    const grid = document.getElementById('grid');
+    const wrap = document.getElementById('wrap');
+    const daySelect = document.getElementById('day');
+    const nowBtn = document.getElementById('nowBtn');
+    const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
+
+    function buildGrid(dayKey) {
+      const columns = Object.keys(schedule[dayKey]);
+      grid.style.gridTemplateColumns = `minmax(70px,90px) repeat(${columns.length}, minmax(var(--cell-min), 1fr))`;
+      grid.innerHTML = '';
+      appendCell('時', ['cell', 'head', 'rowhead']);
+      for (const col of columns) appendCell(col, ['cell', 'head']);
+      for (const h of HOURS) {
+        appendCell(`${h}時`, ['cell', 'rowhead']);
+        for (const col of columns) {
+          const minutes = (schedule[dayKey][col][h] || []).map(m => m.padStart(2, '0'));
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          if (!minutes.length) {
+            cell.textContent = '—';
+          } else {
+            const chips = document.createElement('div');
+            chips.className = 'chips';
+            minutes.forEach(m => {
+              const chip = document.createElement('span');
+              chip.className = 'chip';
+              chip.textContent = m;
+              chips.appendChild(chip);
+            });
+            cell.appendChild(chips);
+          }
+          grid.appendChild(cell);
+        }
+      }
+      highlightNow(dayKey);
+    }
+
+    function appendCell(text, classList) {
+      const el = document.createElement('div');
+      el.className = classList.join(' ');
+      el.textContent = text;
+      grid.appendChild(el);
+    }
+
+    function highlightNow(dayKey) {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = now.getMinutes();
+      const columns = Object.keys(schedule[dayKey]);
+      const headerCols = 1 + columns.length;
+      const rowIndex = HOURS.indexOf(h) + 1;
+      const base = rowIndex * headerCols;
+      for (let i = 0; i < columns.length; i++) {
+        const cell = grid.children[base + 1 + i];
+        const mins = (schedule[dayKey][columns[i]][h] || []).map(n => parseInt(n));
+        if (mins.length) {
+          const closest = mins.reduce((a, b) => Math.abs(b - m) < Math.abs(a - m) ? b : a);
+          if (Math.abs(closest - m) <= 10) cell.classList.add('now');
+        }
+      }
+    }
+
+    function scrollToNow() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const headerCols = 1 + Object.keys(schedule[daySelect.value]).length;
+      const rowIndex = HOURS.indexOf(h) + 1;
+      const targetIndex = rowIndex * headerCols;
+      const target = grid.children[targetIndex];
+      if (target) wrap.scrollTo({ top: target.offsetTop - 48, behavior: 'smooth' });
+    }
+
+    daySelect.addEventListener('change', () => buildGrid(daySelect.value));
+    nowBtn.addEventListener('click', scrollToNow);
+
+    (function init() {
+      const today = new Date();
+      const w = today.getDay();
+      if (w === 0 || w === 6) daySelect.value = 'holiday';
+      else if (w === 3) daySelect.value = 'wednesday';
+      else daySelect.value = 'weekday';
+      buildGrid(daySelect.value);
+    })();
+  </script>
+</body>
+</html>
+
+
+     </main>
+
+  <!-- JavaScript -->
+  <script>
+    // スプラッシュ制御
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.body.classList.add('loaded');
+      }, 3000); // スプラッシュ表示時間
+    });
+
+
+
+    // メニュー開閉
+    const menuBtn = document.getElementById('menuButton');
+    const nav = document.getElementById('menu');
+    menuBtn.addEventListener('click', () => {
+      nav.classList.toggle('show');
+    });
+
+//スマホ版メニューバー　動作
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const menuBtn = document.getElementById('menuButton');
+    const nav = document.getElementById('menu');
+
+    if (menuBtn && nav) {
+      menuBtn.addEventListener('click', () => {
+        nav.classList.toggle('show');
+      });
+    } else {
+      console.error("menuButton または menu が見つかりません。ID を確認してください。");
+    }
+  });
+</script>
+
+
+ <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const menuBtn = document.getElementById('menuButton');
+    const nav = document.getElementById('menu');
+
+    if (menuBtn && nav) {
+      menuBtn.addEventListener('click', function () {
+        nav.classList.toggle('show');
+      });
+    }
+  });
+</script>
+
+
+<!--ここまで掲示用除いてテンプレート-->
+
+
+
+
+</body>
+</html> 
